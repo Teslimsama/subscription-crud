@@ -47,8 +47,11 @@
             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
                 {{ $subscriptionId ? 'Update' : 'Create' }}
             </button>
+            <a href="{{ route('subscriptions.table') }}" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700">
+                Cancel to Livewire table
+            </a>
             <a href="{{ route('subscriptions.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700">
-                Cancel
+                Cancel to normal table
             </a>
         </div>
     </form>

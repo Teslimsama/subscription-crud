@@ -10,6 +10,6 @@ Route::get('/', function () {
 });
 
 Route::get('/subscriptions', LivewireSubscriptionCrud::class)->name('subscriptions.index'); 
-Route::get('/subscriptions-table', LivewireSubscriptionTable::class);
+Route::get('/subscriptions-table', LivewireSubscriptionTable::class)->name('subscriptions.table');
 Route::get('/subscriptions/create', LivewireSubscriptionForm::class)->name('subscriptions.create');
 Route::get('/subscriptions/{id}/edit', LivewireSubscriptionForm::class)->name('subscriptions.edit');

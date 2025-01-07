@@ -1,30 +1,22 @@
-<!-- resources/views/components/layouts/app.blade.php -->
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Subscription CRUD</title>
-    <!-- Custom styles for this template -->
-    <link href="{{asset('storage/css/sb-admin-2.min.css')}}" rel="stylesheet">
-
-    <!-- Custom styles for this page -->
-    <link href="{{asset('storage/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscriptions</title>
     @livewireStyles
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
 <body>
-    <div>
-        {{ $slot }}
+    <div class="container mx-auto py-10">
+        {{-- @yield('content') --}}
+        <div class="add_table">
+                <a href="{{ route('subscriptions.create') }}"
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Add</a>
+                    
+            </div>
+      {{ $slot }}
     </div>
-    <script>
-        Livewire.on('toggleDefault', id => {
-            Livewire.emit('toggleDefault', id);
-        });
-    </script>
-
-    <script src="js/sb-admin-2.min.js"></script>
-
     @livewireScripts
 </body>
-
 </html>

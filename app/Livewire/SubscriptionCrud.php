@@ -68,7 +68,7 @@ class SubscriptionCrud extends Component
             $this->subscription_id ? 'Subscription Updated Successfully.' : 'Subscription Created Successfully.'
         );
 
-        $this->closeModal();
+        // $this->closeModal();
         $this->resetInputFields();
     }
 
