@@ -13,20 +13,32 @@ class SubscriptionTable extends Component
     // {
     //     return view('livewire.subscription-table');
     // }
-    public function builder()
-    {
-        return Subscription::query();
-    }
+    public $model = Subscription::class;
 
     public function columns(): array
     {
         return [
-            Column::make('Name', 'name')->searchable()->sortable(),
-            Column::make('Price', 'price')->sortable(),
-            Column::make('Start Date', 'start_date')->sortable(),
-            Column::make('End Date', 'end_date')->sortable(),
-            Column::make('Actions')
-                ->format(fn($value, $column, $row) => view('livewire.partials.actions', ['id' => $row->id])),
+            Column::make('Name', 'name')
+                ->searchable()
+                ->sortable(),
+            Column::make('Price', 'price')
+                ->sortable(),
+            Column::make('Frequency', 'frequency')
+                ->sortable(),
+            Column::make('Trial Days', 'trial_days')
+                ->sortable(),
+            Column::make('Active Plans', 'active_plans')
+                ->sortable(),
+            Column::make('Make Default', 'is_default')
+                ->format(fn($value, $row) => view('components.toggle', ['row' => $row])),
+            Column::make('Action')
+                ->format(fn($value, $row) => view('components.actions', ['row' => $row])),
         ];
+    }
+
+    public function toggleDefault($id)
+    {
+        Subscription::query()->update(['is_default' => false]); // Reset all to false
+        Subscription::find($id)->update(['is_default' => true]); // Set the selected row to true
     }
 }

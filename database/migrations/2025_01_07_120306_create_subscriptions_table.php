@@ -15,11 +15,14 @@ return new class extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('price', 8, 2);
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->decimal('price', 15, 2);
+            $table->enum('frequency', ['Month', 'Year']);
+            $table->integer('trial_days');
+            $table->integer('active_plans')->default(0);
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
+
     }
 
 

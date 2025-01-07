@@ -7,11 +7,7 @@ use Livewire\Component;
 
 class SubscriptionCrud extends Component
 {
-    // public function render()
-    // {
-    //     return view('livewire.subscription-crud');
-    // }
-    public $subscriptions, $name, $price, $start_date, $end_date, $subscription_id;
+    public $subscriptions, $name, $price, $frequency, $trial_days, $active_plans, $is_default, $subscription_id;
     public $isOpen = false;
 
     public function render()
@@ -23,42 +19,48 @@ class SubscriptionCrud extends Component
     public function create()
     {
         $this->resetInputFields();
-        $this->openModal();
+        // $this->openModal();
     }
 
-    public function openModal()
-    {
-        $this->isOpen = true;
-    }
+    // public function openModal()
+    // {
+    //     $this->isOpen = true;
+    // }
 
-    public function closeModal()
-    {
-        $this->isOpen = false;
-    }
+    // public function closeModal()
+    // {
+    //     $this->isOpen = false;
+    // }
 
     public function resetInputFields()
     {
         $this->name = '';
         $this->price = '';
-        $this->start_date = '';
-        $this->end_date = '';
+        $this->frequency = '';
+        $this->trial_days = '';
+        $this->active_plans = false;
+        $this->is_default = false;
         $this->subscription_id = null;
     }
 
     public function store()
     {
         $this->validate([
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'frequency' => 'required|string|in:Month,Year',
+            'trial_days' => 'required|integer|min:0',
+            'active_plans' => 'boolean',
+            'is_default' => 'boolean',
         ]);
 
         Subscription::updateOrCreate(['id' => $this->subscription_id], [
             'name' => $this->name,
             'price' => $this->price,
-            'start_date' => $this->start_date,
-            'end_date' => $this->end_date,
+            'frequency' => $this->frequency,
+            'trial_days' => $this->trial_days,
+            'active_plans' => $this->active_plans,
+            'is_default' => $this->is_default,
         ]);
 
         session()->flash(
@@ -76,10 +78,12 @@ class SubscriptionCrud extends Component
         $this->subscription_id = $id;
         $this->name = $subscription->name;
         $this->price = $subscription->price;
-        $this->start_date = $subscription->start_date;
-        $this->end_date = $subscription->end_date;
+        $this->frequency = $subscription->frequency;
+        $this->trial_days = $subscription->trial_days;
+        $this->active_plans = $subscription->active_plans;
+        $this->is_default = $subscription->is_default;
 
-        $this->openModal();
+        // $this->openModal();
     }
 
     public function delete($id)
