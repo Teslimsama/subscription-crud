@@ -8,6 +8,8 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\NumberFilter;
 
 class SubscriptionTable extends DataTableComponent
 {
@@ -16,57 +18,91 @@ class SubscriptionTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id')
-             ->setTableAttributes([
-                 'class' => 'table-auto w-full border-collapse border border-gray-200',
-             ])
-             ->setPaginationEnabled(true)
-        ->setAdditionalSelects(['id as id']);;
+            ->setTableAttributes([
+                'class' => 'table-auto w-full border-collapse border border-gray-200',
+            ])
+            ->setPaginationEnabled(true)
+            ->setAdditionalSelects(['id as id']);
     }
 
     public function columns(): array
     {
         return [
             Column::make('Name', 'name')
-            ->searchable()
+                ->searchable()
                 ->sortable(),
             Column::make('Price', 'price')
-            ->sortable(),
+                ->sortable(),
             Column::make('Frequency', 'frequency')
-            ->sortable(),
+                ->sortable(),
             Column::make('Trial Days', 'trial_days')
-            ->sortable(),
+                ->sortable(),
             Column::make('Active Plans', 'active_plans')
-            ->sortable(),
-            
+                ->sortable(),
+
             Column::make('Name')
-            ->view('livewire.action-buttons'),
+                ->view('livewire.action-buttons'),
         ];
     }
 
+    public function filters(): array
+    {
+        return [
+            TextFilter::make('Name') // Search by Name
+                ->filter(function ($query, $value) {
+                    $query->where('name', 'like', "%$value%");
+                }),
+
+            SelectFilter::make('Frequency') // Dropdown for Frequency
+                ->options([
+                    '' => 'All',
+                    'daily' => 'Daily',
+                    'weekly' => 'Weekly',
+                    'monthly' => 'Monthly',
+                    'yearly' => 'Yearly',
+                ])
+                ->filter(function ($query, $value) {
+                    if ($value) {
+                        $query->where('frequency', $value);
+                    }
+                }),
+
+            NumberFilter::make('Trial Days') // Filter by Trial Days
+                ->filter(function ($query, $value) {
+                    $query->where('trial_days', $value);
+                }),
+
+            SelectFilter::make('Active Plans') // Dropdown for Active Plans
+                ->options([
+                    '' => 'All',
+                    '0' => 'Inactive',
+                    '1' => 'Active',
+                ])
+                ->filter(function ($query, $value) {
+                    if ($value !== '') {
+                        $query->where('active_plans', $value);
+                    }
+                }),
+        ];
+    }
 
     public function edit($id)
     {
-        // Redirect or handle the edit functionality (you can open a modal, for instance)
         return redirect()->route('subscriptions.edit', $id);
     }
 
     public function delete($id)
     {
-        // Delete the record and refresh the table
         $subscription = Subscription::find($id);
         if ($subscription) {
             $subscription->delete();
-            // Optionally, emit an event to refresh the table
             $this->emit('refreshTable');
         }
     }
 
     public function toggleDefault($id)
     {
-        // Reset all subscriptions to 'false'
         Subscription::query()->update(['is_default' => false]);
-
-        // Set the selected subscription to 'true'
         Subscription::find($id)->update(['is_default' => true]);
     }
 }
