@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Subscription;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Actions\Action;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
@@ -22,9 +23,17 @@ class SubscriptionTable extends DataTableComponent
                 'class' => 'table-auto w-full border-collapse border border-gray-200',
             ])
             ->setPaginationEnabled(true)
-            ->setAdditionalSelects(['id as id']);
+            ->setAdditionalSelects(['id as id'])
+            ->setConfigurableAreas([
+                
+                // 'toolbar-right-start' => 'livewire.add-button',
+                'toolbar-right-end' => 'livewire.add-button',
+            ]);
     }
-
+    public function addSubcription()
+    {
+        return redirect()->route('subscriptions.create');
+    }
     public function columns(): array
     {
         return [
@@ -86,6 +95,17 @@ class SubscriptionTable extends DataTableComponent
         ];
     }
 
+    // public function actions(): array
+    // {
+    //     return [
+    //         Action::make('Add Subcription Plan')
+    //             ->setRoute('subscriptions/create')->wireNavigate()
+    //             ->setLabelAttributes([
+    //                 'class' => '',
+    //                 'default' => false,
+    //             ]),
+    //     ];
+    // }
     public function edit($id)
     {
         return redirect()->route('subscriptions.edit', $id);
